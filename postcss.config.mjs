@@ -1,6 +1,8 @@
 const config = {
   plugins: {
-    "@tailwindcss/postcss": {},
+    "@tailwindcss/postcss": {
+      theme: { extend: { fontFamily: { display: ["var(--font-cormorant)", "serif"] } } } 
+    },
   },
 };
 

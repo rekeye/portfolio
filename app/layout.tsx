@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Cormorant } from "next/font/google";
+import { Cormorant, Geist } from "next/font/google";
 import "lenis/dist/lenis.css";
 import "./globals.css";
 
 const cormorant = Cormorant({
   variable: "--font-cormorant",
   subsets: ["latin"],
-  weight: ["300","400","500","600"]
+  weight: ["300", "400", "500", "600"],
+});
+const geist = Geist({
+  variable: "--font-geist",
 });
 
 export const metadata: Metadata = {
@@ -23,11 +26,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${cormorant.variable} h-full antialiased cursor-none`}
+      className={`${cormorant.variable} ${geist.className} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-">
-          {children}
-      </body>
+      <body className="min-h-full flex flex-col items-center">{children}</body>
     </html>
   );
 }

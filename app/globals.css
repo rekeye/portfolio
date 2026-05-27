@@ -7,7 +7,10 @@
   --muted: #1a2e1a;
 }
 
-@theme inline {
+@theme {
+  --font-display: var(--font-cormorant);
+  --font-default: var(--font-geist);
+  
   --color-canvas: var(--canvas);
   --color-ink: var(--ink);
   --color-accent: var(--accent);
@@ -17,4 +20,13 @@
 body {
   background-color: var(--canvas);
   color: var(--ink);
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+.cursor--blinking {
+  animation: blink 0.53s step-end infinite;
 }

@@ -1,10 +1,16 @@
+import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { defineQuery } from "next-sanity";
+import { Image } from "next-sanity/image";
 import { Section } from "@/app/work/_components/section";
 import { BodyColumn } from "@/app/work/_components/body-column";
 import { Prose } from "@/app/work/_components/prose";
+import { Hr } from "@/components/generic/hr";
 import { client } from "@/sanity/lib/client";
-import { Metadata } from "next";
+import { urlFor } from "@/sanity/lib/sanityImageUrl";
+import { Gallery } from "@/app/work/_components/gallery";
+import { SanityImageSource } from "@sanity/image-url";
 
 async function getProject(slug: string) {
   return client.fetch(PROJECT_QUERY, { slug });
@@ -25,72 +31,64 @@ export default async function CaseStudyPage({
     role,
     stack = [],
     summary,
+    heroImage,
+    heroAlt,
     overview,
+    detailImage,
+    detailAlt,
     problem,
     approach,
     outcome,
+    gallery,
     url,
     repo,
   } = project;
 
   return (
-    <div className="min-h-screen bg-[#f2f0eb] text-[#1a2e1a]">
+    <div className="container min-h-screen text-muted">
       <nav className="fixed inset-x-0 top-0 z-50 flex items-center justify-between px-5 py-5 md:px-10">
         <Link
-          href="/public"
-          className="font-geist text-xs uppercase tracking-[0.18em] text-[#1a2e1a]/50 transition-colors hover:text-[#1a2e1a]"
+          href="/"
+          className="font-geist text-xs uppercase tracking-[0.18em] text-muted/50 transition-colors hover:text-muted"
         >
           ← Back
         </Link>
-        <span className="font-geist text-xs uppercase tracking-[0.18em] text-[#1a2e1a]">
+        <span className="font-geist text-xs uppercase tracking-[0.18em] text-muted">
           SP
         </span>
       </nav>
 
-      {/* ── Hero ── */}
       <header className="px-5 pb-16 pt-32 md:px-10 md:pt-40">
-        {/* Year tag */}
-        <p className="font-geist mb-6 text-xs uppercase tracking-[0.18em] text-[#1a2e1a]/40">
+        <p className="font-geist mb-6 text-xs uppercase tracking-[0.18em] text-muted/40">
           {year}
         </p>
-
-        {/* Title */}
         <h1 className="font-display mb-8 max-w-4xl text-[clamp(3rem,8vw,7rem)] font-normal leading-[0.92] tracking-[-0.02em]">
           {title}
         </h1>
-
-        {/* Divider */}
-        <div className="mb-8 h-px w-full bg-[#1a2e1a]/10" />
-
-        {/* Meta row */}
+        <Hr />
         <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-          {/* Summary */}
-          <p className="font-geist max-w-lg text-sm leading-relaxed text-[#1a2e1a]/60">
+          <p className="font-geist max-w-lg text-sm leading-relaxed text-muted/60">
             {summary}
           </p>
-
-          {/* Role + Stack */}
           <div className="flex flex-col gap-4 md:items-end">
             {role && (
               <div className="flex flex-col gap-1 md:items-end">
-                <span className="font-geist text-[10px] uppercase tracking-[0.2em] text-[#1a2e1a]/30">
+                <span className="font-geist text-[10px] uppercase tracking-[0.2em] text-muted/30">
                   Role
                 </span>
-                <span className="font-geist text-xs text-[#1a2e1a]/60">
-                  {role}
-                </span>
+                <span className="font-geist text-xs text-muted/60">{role}</span>
               </div>
             )}
-            {stack.length > 0 && (
+            {stack !== null && stack.length > 0 && (
               <div className="flex flex-col gap-1 md:items-end">
-                <span className="font-geist text-[10px] uppercase tracking-[0.2em] text-[#1a2e1a]/30">
+                <span className="font-geist text-[10px] uppercase tracking-[0.2em] text-muted/30">
                   Stack
                 </span>
                 <div className="flex flex-wrap gap-1.5 md:justify-end">
                   {stack.map((item: string) => (
                     <span
                       key={item}
-                      className="font-geist rounded-full border border-[#1a2e1a]/15 px-2.5 py-0.5 text-[10px] uppercase tracking-[0.12em] text-[#1a2e1a]/50"
+                      className="font-geist rounded-full border border-muted/15 px-2.5 py-0.5 text-[10px] uppercase tracking-[0.12em] text-muted/50"
                     >
                       {item}
                     </span>
@@ -102,16 +100,21 @@ export default async function CaseStudyPage({
         </div>
       </header>
 
-      {/* ── Body ── */}
+      {heroImage && heroAlt && (
+        <div className="mb-12 flex justify-center md:mb-24">
+          <div className="relative aspect-video w-full max-w-5xl overflow-hidden rounded-2xl border border-muted/10 bg-white shadow-sm p-12">
+            <Image src={urlFor(heroImage).url()} alt={heroAlt} fill />
+          </div>
+        </div>
+      )}
+
       <main className="px-5 md:px-10">
-        {/* Overview */}
         {overview && (
           <Section label="Overview">
             <Prose text={overview} />
           </Section>
         )}
 
-        {/* Problem / Approach / Outcome — three-column on desktop */}
         {(problem || approach || outcome) && (
           <div className="mb-24 grid gap-12 md:grid-cols-3 md:gap-8">
             {problem && <BodyColumn label="Problem" text={problem} />}
@@ -120,25 +123,53 @@ export default async function CaseStudyPage({
           </div>
         )}
 
-        {/* Divider */}
-        <div className="mb-16 h-px w-full bg-[#1a2e1a]/10" />
+        {detailImage && detailAlt && (
+          <div className="mb-12 flex justify-center md:mb-24">
+            <div className="relative aspect-video w-full max-w-5xl overflow-hidden rounded-2xl border border-muted/10 bg-white shadow-sm p-12">
+              <Image
+                src={urlFor(detailImage).url()}
+                alt={detailAlt}
+                fill
+                className="object-contain"
+              />
+            </div>
+          </div>
+        )}
 
-        {/* Links */}
+        <Hr />
+
+        {gallery && (
+          <Gallery
+            images={gallery.map(
+              (img: {
+                asset: SanityImageSource;
+                alt: string;
+                span?: 1 | 2;
+              }) => ({
+                src: urlFor(img.asset).width(1200).url(),
+                alt: img.alt,
+                span: img.span,
+              }),
+            )}
+          />
+        )}
+
+        <Hr />
+
         <div className="mb-24 flex flex-col gap-4 md:flex-row md:gap-8">
           {url && <ExternalLink href={url} label="Live site" />}
           {repo && <ExternalLink href={repo} label="GitHub" />}
         </div>
       </main>
 
-      {/* ── Footer nav ── */}
-      <footer className="flex items-center justify-between border-t border-[#1a2e1a]/10 px-5 py-8 md:px-10">
+      <footer className="flex items-center justify-between border-t border-muted/10 mx-5 py-8 md:mx-10">
         <Link
-          href="/public#work"
-          className="font-geist text-xs uppercase tracking-[0.18em] text-[#1a2e1a]/40 transition-colors hover:text-[#1a2e1a]"
+          href="/#work"
+          className="font-geist text-xs uppercase tracking-[0.18em] text-muted/40 transition-colors hover:text-muted"
         >
           ← All work
         </Link>
-        <span className="font-geist text-xs uppercase tracking-[0.18em] text-[#1a2e1a]/20">
+        <span className="font-geist text-xs uppercase tracking-[0.18em] text-muted/20">
           © {new Date().getFullYear()}
         </span>
       </footer>
@@ -154,7 +185,7 @@ function ExternalLink({ href, label }: { href: string; label: string }) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="group font-geist inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[#1a2e1a]"
+      className="group font-geist inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-muted"
     >
       <span className="relative overflow-hidden">
         <span className="inline-block transition-transform duration-300 group-hover:-translate-y-full">
@@ -164,7 +195,7 @@ function ExternalLink({ href, label }: { href: string; label: string }) {
           {label}
         </span>
       </span>
-      <span className="flex h-6 w-6 items-center justify-center rounded-full border border-[#1a2e1a]/20 transition-all duration-300 group-hover:border-[#2d5a27] group-hover:bg-[#2d5a27] group-hover:text-[#f2f0eb]">
+      <span className="flex h-6 w-6 items-center justify-center rounded-full border border-muted/20 transition-all duration-300 group-hover:border-[#2d5a27] group-hover:bg-[#2d5a27] group-hover:text-[#f2f0eb]">
         <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
           <path
             d="M1 7L7 1M7 1H3M7 1V5"
@@ -198,18 +229,23 @@ export async function generateStaticParams() {
   return slugs.map((slug: string) => ({ slug }));
 }
 
-const PROJECT_QUERY = `
+const PROJECT_QUERY = defineQuery(`
   *[_type == "project" && slug.current == $slug][0] {
     title,
     year,
     role,
     stack,
     summary,
+    heroImage,
+    heroAlt,
     overview,
+    detailImage,
+    detailAlt,
     problem,
     approach,
     outcome,
+    gallery,
     url,
     repo,
   }
-`;
+`);

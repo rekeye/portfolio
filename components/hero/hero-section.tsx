@@ -1,5 +1,6 @@
 import { HeroTitle } from "@/components/hero/hero-title";
 import { MagneticLink } from "@/components/navigation/magnetic-link";
+import "./hero.module.css";
 
 export function HeroSection() {
   return (

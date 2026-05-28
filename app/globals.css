@@ -27,6 +27,15 @@ body {
   50%       { opacity: 0; }
 }
 
+@-webkit-keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
 .cursor--blinking {
-  animation: blink 0.53s step-end infinite;
+  -webkit-animation: blink 1s step-end infinite;
+  animation: blink 1s step-end infinite;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: opacity;
 }

@@ -4,10 +4,140 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(useGSAP);
 
-const BASE_INTERVAL = 0.15;
-const JITTER = 0.05;
+const DELETE_INTERVAL = 0.06;
+const DELETE_JITTER = 0.015;
+const PAUSE_TIME = 1;
+const PAUSE_BEFORE = 0.2;
 
-export function useTypingAnimation({ text }: { text: string }) {
+export class TextLine {
+  text;
+  title: string;
+  interval;
+  jitter;
+
+  constructor(text: string, title: string, interval: number, jitter: number) {
+    this.text = text;
+    this.title = title;
+    this.interval = interval;
+    this.jitter = jitter;
+  }
+}
+
+const getCharTimesWithJitter = (
+  text: string,
+  baseInterval: number,
+  jitter: number,
+) =>
+  text.split("").reduce((acc: number[], _: string, i: number) => {
+    const prev = i === 0 ? 0 : acc[i - 1];
+    const interval = baseInterval + (Math.random() * jitter * 2 - jitter);
+    acc.push(prev + interval);
+    return acc;
+  }, []);
+
+const handleTypeLine = (
+  line: TextLine,
+  tl: GSAPTimeline,
+  {
+    charTimes,
+    lineDuration,
+    container,
+  }: {
+    charTimes: number[];
+    lineDuration: number;
+    container: HTMLElement;
+  },
+) => {
+  tl.addLabel(`${line.title}Start+=${lineDuration + 0.1}`);
+  line.text.split("").forEach((char, i) => {
+    tl.call(
+      () => {
+        container.textContent += char;
+      },
+      [],
+      `${line.title}Start+=${charTimes[i]}`,
+    );
+  });
+};
+
+const handleDeleteLine = (
+  line: TextLine,
+  tl: GSAPTimeline,
+  {
+    nextLine,
+    lineDuration,
+    container,
+  }: {
+    nextLine: TextLine;
+    lineDuration: number;
+    container: HTMLElement;
+  },
+) => {
+  const deleteTimes = getCharTimesWithJitter(
+    line.text,
+    DELETE_INTERVAL,
+    DELETE_JITTER,
+  );
+  const deleteDuration = deleteTimes[deleteTimes.length - 1];
+
+  tl.addLabel(
+    `${line.title}DeleteStart`,
+    `${line.title}Start+=${lineDuration + PAUSE_TIME}`,
+  );
+
+  line.text.split("").forEach((_, i) => {
+    tl.call(
+      () => {
+        container.textContent = container.textContent.slice(0, -1);
+      },
+      [],
+      `${line.title}DeleteStart+=${deleteTimes[i]}`,
+    );
+  });
+
+  tl.addLabel(
+    `${nextLine.title}Start`,
+    `${line.title}DeleteStart+=${deleteDuration + PAUSE_BEFORE}`,
+  );
+};
+
+const handleCursorBlink = (
+  cursor: HTMLElement,
+  tl: GSAPTimeline,
+  {
+    line,
+    lineDuration,
+  }: {
+    line: TextLine;
+    lineDuration: number;
+  },
+) => {
+  const BLINK_START = `${line.title}Start+=${lineDuration + 0.1}`;
+  const CURSOR_FADE = `${line.title}Start+=${lineDuration + 6.0}`;
+
+  tl.call(
+    () => {
+      gsap.set(cursor, { clearProps: "opacity" });
+      gsap.set(cursor, { clearProps: "webkitAnimation" });
+      void cursor.offsetWidth;
+      cursor.classList.add("cursor--blinking");
+    },
+    [],
+    BLINK_START,
+  );
+
+  tl.to(cursor, { opacity: 0, duration: 0.4, ease: "power2.out" }, CURSOR_FADE);
+
+  tl.call(
+    () => {
+      cursor.classList.remove("cursor--blinking");
+    },
+    [],
+    `${CURSOR_FADE}+=0.41`,
+  );
+};
+
+export function useTypingAnimation({ textLines }: { textLines: TextLine[] }) {
   const containerRef = useRef<HTMLElement>(null);
   const cursorRef = useRef<HTMLElement>(null);
 
@@ -16,60 +146,29 @@ export function useTypingAnimation({ text }: { text: string }) {
     const cursor = cursorRef.current;
     if (!container || !cursor) return;
 
-    const characters = text.split("");
-    const charTimes = characters.reduce((acc: number[], _, i) => {
-      const prev = i === 0 ? 0 : acc[i - 1];
-      const interval = BASE_INTERVAL + (Math.random() * JITTER * 2 - JITTER);
-      acc.push(prev + interval);
-      return acc;
-    }, []);
-
-    gsap.set(cursor, { opacity: 0 });
-
     const tl = gsap.timeline({ delay: 0.2 });
-    tl.addLabel("typingStart", "+=0.15");
-
-    characters.forEach((char, i) => {
-      tl.call(
-        () => {
-          container.textContent += char;
-        },
-        [],
-        `typingStart+=${charTimes[i]}`,
+    for (let i = 0; i < textLines.length; i++) {
+      const line = textLines[i];
+      const charTimes = getCharTimesWithJitter(
+        line.text,
+        line.interval,
+        line.jitter,
       );
-    });
+      const lineDuration = charTimes[charTimes.length - 1];
 
-    const typingDuration = charTimes[charTimes.length - 1];
-    const BLINK_START = `typingStart+=${typingDuration + 0.1}`;
-    const CURSOR_FADE = `typingStart+=${typingDuration + 6.0}`;
+      handleTypeLine(line, tl, { charTimes, lineDuration, container });
 
-    // Start CSS blink animation
-    tl.call(
-      () => {
-        cursor.classList.add("cursor--blinking");
-      },
-      [],
-      BLINK_START,
-    );
-
-    tl.to(
-      cursor,
-      {
-        opacity: 0,
-        duration: 0.4,
-        ease: "power2.out",
-      },
-      CURSOR_FADE,
-    );
-
-    // Clean up class after fade completes
-    tl.call(
-      () => {
-        cursor.classList.remove("cursor--blinking");
-      },
-      [],
-      `${CURSOR_FADE}+=0.4`,
-    );
+      if (i < textLines.length - 1) {
+        handleDeleteLine(line, tl, {
+          nextLine: textLines[i + 1],
+          lineDuration,
+          container,
+        });
+      }
+      if (i === textLines.length - 1) {
+        handleCursorBlink(cursor, tl, { line, lineDuration });
+      }
+    }
 
     return () => {
       tl.kill();

@@ -1,22 +1,31 @@
 "use client";
 
-import { useTypingAnimation } from "@/hooks/useTypingAnimation";
+import { TextLine, useTypingAnimation } from "@/hooks/useTypingAnimation";
 
-const NAME = "Szymon Paluch.";
+const GREETING = new TextLine("Hi, my name is", "greeting", 0.05, 0.02);
+const NAME = new TextLine("Szymon Paluch.", "name", 0.072, 0.03);
 
 export function HeroTitle() {
-  const { containerRef, cursorRef } = useTypingAnimation({ text: NAME });
+  const { containerRef, cursorRef } = useTypingAnimation({
+    textLines: [GREETING, NAME],
+  });
+
+  // TODO: cursor animation on safari is not running
 
   return (
-    <>
-      <h1 className="font-display text-[clamp(3.8rem,14vw,5.5rem)] md:text-[clamp(5rem,12vw,11rem)]">
-        <span ref={containerRef} />
-        <span
-          ref={cursorRef}
-          className="inline-block h-[0.85em] w-0.75 translate-y-[0.05em] bg-[#2d5a27] align-middle"
-          aria-hidden="true"
-        />
-      </h1>
-    </>
+    <h1 className="flex items-center font-display text-[clamp(3.8rem,14vw,5.5rem)] md:text-[clamp(5rem,12vw,11rem)]">
+      <span ref={containerRef} />
+      <span
+        ref={cursorRef}
+        className="inline-block"
+        style={{
+          width: "2px",
+          backgroundColor: "var(--ink)",
+          height: "0.85em",
+          flexShrink: 0,
+        }}
+        aria-hidden="true"
+      />
+    </h1>
   );
 }

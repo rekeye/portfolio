@@ -1,8 +1,9 @@
 import { HeroTitle } from "@/app/_components/hero/hero-title";
 import { MagneticLink } from "@/components/navigation/magnetic-link";
-import styles from "./hero-section.module.css";
+import styles from "../../../../components/generic/pulsing-dot/pulsing-dot.module.css";
 import { client } from "@/sanity/lib/client";
 import { defineQuery } from "next-sanity";
+import { PulsingDot } from "@/components/generic/pulsing-dot/pulsing-dot";
 
 export async function HeroSection() {
   const settings = await client.fetch(AVAILABILITY_QUERY);
@@ -17,7 +18,7 @@ export async function HeroSection() {
           <h2>Frontend engineering, done properly.</h2>
           {settings && settings.available && (
             <p>
-              <span className={styles.dot_heartbeat}>●</span> Available for work
+              <PulsingDot /> Available for work
             </p>
           )}
         </div>

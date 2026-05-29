@@ -1,3 +1,5 @@
+import { PulsingDot } from "@/components/generic/pulsing-dot/pulsing-dot";
+
 export function Fact({
   label,
   value,
@@ -17,10 +19,7 @@ export function Fact({
           accent ? "text-[#2d5a27]" : "text-[#1a2e1a]/60"
         }`}
       >
-        {accent && (
-          <span className="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-[#2d5a27] align-middle" />
-        )}
-        {value}
+        {accent && <PulsingDot />} {value}
       </span>
     </li>
   );

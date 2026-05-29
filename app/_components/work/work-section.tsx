@@ -34,6 +34,9 @@ const SELECTED_PROJECTS_QUERY = defineQuery(`
     year,
     summary,
     stack,
-    "heroImage": heroImage.asset->url,
+    heroImage {
+      "image": image.asset->url,
+      alt
+    },
   }
 `);

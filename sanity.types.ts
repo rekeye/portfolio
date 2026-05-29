@@ -27,14 +27,14 @@ export type Settings = {
 
 export type Link = {
   _type: "link";
-  label?: string;
-  url?: string;
+  label: string;
+  href: string;
 };
 
 export type Fact = {
   _type: "fact";
-  label?: string;
-  value?: string;
+  label: string;
+  value: string;
 };
 
 export type About = {
@@ -262,12 +262,12 @@ export type ABOUT_QUERY_RESULT = {
   prose: string | null;
   hobbies: string | null;
   facts: Array<{
-    label: string | null;
-    value: string | null;
+    label: string;
+    value: string;
   }> | null;
   links: Array<{
-    label: string | null;
-    href: null;
+    label: string;
+    href: string;
   }> | null;
   images: Array<{
     image: string | null;
@@ -284,30 +284,37 @@ export type AVAILABILITY_QUERY_RESULT = {
 
 // Source: app/_components/work/work-section.tsx
 // Variable: SELECTED_PROJECTS_QUERY
-// Query: *[_type == "project"] | order(order asc) {    title,    "slug": slug.current,    year,    summary,    stack,    "heroImage": heroImage.asset->url,  }
+// Query: *[_type == "project"] | order(order asc) {    title,    "slug": slug.current,    year,    summary,    stack,    heroImage {      "image": image.asset->url,      alt    },  }
 export type SELECTED_PROJECTS_QUERY_RESULT = Array<{
   title: string;
   slug: string;
   year: string;
   summary: string;
   stack: Array<string> | null;
-  heroImage: null;
+  heroImage: {
+    image: string | null;
+    alt: string | null;
+  };
 }>;
 
 // Source: app/work/[slug]/page.tsx
 // Variable: PROJECT_QUERY
-// Query: *[_type == "project" && slug.current == $slug][0] {    title,    year,    role,    stack,    summary,    heroImage,    heroAlt,    overview,    detailImage,    detailAlt,    problem,    approach,    outcome,    gallery,    url,    repo,  }
+// Query: *[_type == "project" && slug.current == $slug][0] {    title,    year,    role,    stack,    summary,    heroImage {      "image": image.asset->url,      alt    },    overview,    detailImage {      "image": image.asset->url,      alt    },    problem,    approach,    outcome,    gallery,    url,    repo,  }
 export type PROJECT_QUERY_RESULT = {
   title: string;
   year: string;
   role: string;
   stack: Array<string> | null;
   summary: string;
-  heroImage: ImageWithAlt;
-  heroAlt: null;
+  heroImage: {
+    image: string | null;
+    alt: string | null;
+  };
   overview: string | null;
-  detailImage: ImageWithAlt | null;
-  detailAlt: null;
+  detailImage: {
+    image: string | null;
+    alt: string | null;
+  } | null;
   problem: string | null;
   approach: string | null;
   outcome: string | null;
@@ -327,7 +334,7 @@ declare module "@sanity/client" {
     '\n*[_type == "settings"][0] {\n  available,\n  currentRole\n}\n': CURRENT_ROLE_QUERY_RESULT;
     '\n*[_type == "about"][0] {\n  prose,\n  hobbies,\n  "facts": facts[] {\n    label,\n    value\n  },\n  "links": links[] {\n    label,\n    href,\n  },\n  "images": images[] {\n    "image": image.asset->url,\n    alt\n  }\n}\n': ABOUT_QUERY_RESULT;
     '\n*[_type == "settings"][0] {\n  available\n}\n': AVAILABILITY_QUERY_RESULT;
-    '\n  *[_type == "project"] | order(order asc) {\n    title,\n    "slug": slug.current,\n    year,\n    summary,\n    stack,\n    "heroImage": heroImage.asset->url,\n  }\n': SELECTED_PROJECTS_QUERY_RESULT;
-    '\n  *[_type == "project" && slug.current == $slug][0] {\n    title,\n    year,\n    role,\n    stack,\n    summary,\n    heroImage,\n    heroAlt,\n    overview,\n    detailImage,\n    detailAlt,\n    problem,\n    approach,\n    outcome,\n    gallery,\n    url,\n    repo,\n  }\n': PROJECT_QUERY_RESULT;
+    '\n  *[_type == "project"] | order(order asc) {\n    title,\n    "slug": slug.current,\n    year,\n    summary,\n    stack,\n    heroImage {\n      "image": image.asset->url,\n      alt\n    },\n  }\n': SELECTED_PROJECTS_QUERY_RESULT;
+    '\n  *[_type == "project" && slug.current == $slug][0] {\n    title,\n    year,\n    role,\n    stack,\n    summary,\n    heroImage {\n      "image": image.asset->url,\n      alt\n    },\n    overview,\n    detailImage {\n      "image": image.asset->url,\n      alt\n    },\n    problem,\n    approach,\n    outcome,\n    gallery,\n    url,\n    repo,\n  }\n': PROJECT_QUERY_RESULT;
   }
 }

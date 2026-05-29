@@ -10,7 +10,6 @@ import { Hr } from "@/components/generic/hr";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/sanityImageUrl";
 import { Gallery } from "@/app/work/_components/gallery";
-import { SanityImageSource } from "@sanity/image-url";
 import { SanityImageAssetReference } from "@/sanity.types";
 import { ExternalLink } from "@/components/generic/external-link";
 
@@ -34,10 +33,8 @@ export default async function CaseStudyPage({
     stack = [],
     summary,
     heroImage,
-    heroAlt,
     overview,
     detailImage,
-    detailAlt,
     problem,
     approach,
     outcome,
@@ -104,10 +101,14 @@ export default async function CaseStudyPage({
         </div>
       </header>
 
-      {heroImage && heroAlt && (
+      {heroImage.image && heroImage.alt && (
         <div className="mb-12 flex justify-center md:mb-24">
-          <div className="relative aspect-video w-full max-w-5xl overflow-hidden rounded-2xl border border-muted/10 bg-white shadow-sm p-12">
-            <Image src={urlFor(heroImage).url()} alt={heroAlt} fill />
+          <div className="relative aspect-video object-cover w-full max-w-5xl overflow-hidden rounded-2xl border border-muted/10 bg-white shadow-sm p-12">
+            <Image
+              src={urlFor(heroImage.image).url()}
+              alt={heroImage.alt}
+              fill
+            />
           </div>
         </div>
       )}
@@ -127,12 +128,12 @@ export default async function CaseStudyPage({
           </div>
         )}
 
-        {detailImage && detailAlt && (
+        {detailImage?.image && detailImage.alt && (
           <div className="mb-12 flex justify-center md:mb-24">
             <div className="relative aspect-video w-full max-w-5xl overflow-hidden rounded-2xl border border-muted/10 bg-white shadow-sm p-12">
               <Image
-                src={urlFor(detailImage).url()}
-                alt={detailAlt}
+                src={urlFor(detailImage.image).url()}
+                alt={detailImage.alt}
                 fill
                 className="object-contain"
               />
@@ -205,15 +206,22 @@ const PROJECT_QUERY = defineQuery(`
     role,
     stack,
     summary,
-    heroImage,
-    heroAlt,
+    heroImage {
+      "image": image.asset->url,
+      alt
+    },
     overview,
-    detailImage,
-    detailAlt,
+    detailImage {
+      "image": image.asset->url,
+      alt
+    },
     problem,
     approach,
     outcome,
-    gallery,
+    "gallery":gallery[]->{
+    "image": image.asset->url,
+    alt
+    },
     url,
     repo,
   }

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Image } from "next-sanity/image";
 import { SELECTED_PROJECTS_QUERY_RESULT } from "@/sanity.types";
 import { ArrowIcon } from "@/components/generic/arrow-icon";
+import { urlFor } from "@/sanity/lib/sanityImageUrl";
 
 export function WorkCard({
   project,
@@ -25,11 +26,10 @@ export function WorkCard({
       >
         {heroImage ? (
           <Image
-            src={heroImage}
+            src={urlFor(heroImage.image || "").url()}
             alt={title}
             fill
             className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-[1.04]"
-            style={{ mixBlendMode: "multiply" }}
             sizes="(max-width: 768px) 100vw, 50vw"
           />
         ) : (

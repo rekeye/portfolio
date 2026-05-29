@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { Cormorant, Geist } from "next/font/google";
 import "lenis/dist/lenis.css";
 import "./globals.css";
+import { Navbar } from "@/components/navigation/navbar";
 
 const cormorant = Cormorant({
   variable: "--font-cormorant",
@@ -28,7 +29,12 @@ export default function RootLayout({
       lang="en"
       className={`${cormorant.variable} ${geist.className} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col items-center">{children}</body>
+      <body className="min-h-full flex flex-col items-center">
+        <Navbar />
+        <div className="container flex flex-col gap-24 px-5 md:px-0">
+          {children}
+        </div>
+      </body>
     </html>
   );
 }

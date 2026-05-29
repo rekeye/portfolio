@@ -6,7 +6,7 @@ export async function WorkSection() {
   const projects = await client.fetch(SELECTED_PROJECTS_QUERY);
 
   return (
-    <section id="work" className="container px-5 py-24">
+    <section id="work">
       {/* Section header */}
       <div className="mb-12 flex items-end justify-between">
         <p className="font-geist text-[10px] uppercase tracking-[0.2em] text-[#1a2e1a]/30">

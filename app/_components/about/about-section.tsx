@@ -12,7 +12,7 @@ export async function AboutSection() {
   if (!about) throw new Error("About not found");
 
   return (
-    <section id="about" className="container px-5 py-24">
+    <section id="about">
       <p className="font-geist mb-8 text-[10px] uppercase tracking-[0.2em] text-[#1a2e1a]/30">
         About
       </p>
@@ -57,8 +57,8 @@ export async function AboutSection() {
         </div>
       </div>
       {about.images && (
-        <div className="mt-16 grid h-105 grid-cols-2 gap-3 md:mt-20 md:h-180 md:grid-cols-3">
-          <div className="relative col-span-1 overflow-hidden rounded-lg md:col-span-2">
+        <div className="mt-16 grid h-105 grid-rows-3 grid-cols-2 sm:grid-rows-2 sm:grid-cols-2 gap-3 md:mt-20 md:h-180 md:grid-cols-3">
+          <div className="relative col-span-2 row-span-2 sm:col-span-1 overflow-hidden rounded-lg md:col-span-2">
             <Image
               src={urlFor(about.images[0].image || "").url()}
               alt={about.images[0].alt || ""}
@@ -67,22 +67,20 @@ export async function AboutSection() {
               sizes="(max-width: 768px) 50vw, 66vw"
             />
           </div>
-          <div className="col-span-1 flex flex-col gap-3">
-            {about.images.slice(1).map(({ image, alt }, i) => (
-              <div
-                key={i}
-                className="relative flex-1 overflow-hidden rounded-lg"
-              >
-                <Image
-                  src={urlFor(image || "").url()}
-                  alt={alt || ""}
-                  fill
-                  className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:scale-[1.03]"
-                  sizes="(max-width: 768px) 50vw, 33vw"
-                />
-              </div>
-            ))}
-          </div>
+          {about.images.slice(1).map(({ image, alt }, i) => (
+            <div
+              key={i}
+              className="relative row-span-1 sm:aspect-auto flex-1 overflow-hidden rounded-lg"
+            >
+              <Image
+                src={urlFor(image || "").url()}
+                alt={alt || ""}
+                fill
+                className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:scale-[1.03]"
+                sizes="(max-width: 768px) 50vw, 33vw"
+              />
+            </div>
+          ))}
         </div>
       )}
     </section>

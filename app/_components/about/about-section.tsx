@@ -57,7 +57,7 @@ export async function AboutSection() {
         </div>
       </div>
       {about.images && (
-        <div className="mt-16 grid h-105 grid-cols-2 gap-3 md:mt-20 md:h-140 md:grid-cols-3">
+        <div className="mt-16 grid h-105 grid-cols-2 gap-3 md:mt-20 md:h-180 md:grid-cols-3">
           <div className="relative col-span-1 overflow-hidden rounded-lg md:col-span-2">
             <Image
               src={urlFor(about.images[0].image || "").url()}

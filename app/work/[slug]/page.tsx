@@ -11,6 +11,8 @@ import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/sanityImageUrl";
 import { Gallery } from "@/app/work/_components/gallery";
 import { SanityImageSource } from "@sanity/image-url";
+import { SanityImageAssetReference } from "@/sanity.types";
+import { ExternalLink } from "@/app/work/_components/external-link";
 
 async function getProject(slug: string) {
   return client.fetch(PROJECT_QUERY, { slug });
@@ -46,17 +48,19 @@ export default async function CaseStudyPage({
 
   return (
     <div className="container min-h-screen text-muted">
-      <nav className="fixed inset-x-0 top-0 z-50 flex items-center justify-between px-5 py-5 md:px-10">
-        <Link
-          href="/"
-          className="font-geist text-xs uppercase tracking-[0.18em] text-muted/50 transition-colors hover:text-muted"
-        >
-          ← Back
-        </Link>
-        <span className="font-geist text-xs uppercase tracking-[0.18em] text-muted">
-          SP
-        </span>
-      </nav>
+      <div className="fixed inset-x-0 top-0 z-50 flex items-center justify-center py-5">
+        <nav className="container flex justify-between gap-4">
+          <Link
+            href="/"
+            className="font-geist text-xs uppercase tracking-[0.18em] text-muted/50 transition-colors hover:text-muted"
+          >
+            ← Back
+          </Link>
+          <span className="font-geist text-xs uppercase tracking-[0.18em] text-muted">
+            SP
+          </span>
+        </nav>
+      </div>
 
       <header className="px-5 pb-16 pt-32 md:px-10 md:pt-40">
         <p className="font-geist mb-6 text-xs uppercase tracking-[0.18em] text-muted/40">
@@ -141,14 +145,12 @@ export default async function CaseStudyPage({
         {gallery && (
           <Gallery
             images={gallery.map(
-              (img: {
-                asset: SanityImageSource;
-                alt: string;
-                span?: 1 | 2;
-              }) => ({
-                src: urlFor(img.asset).width(1200).url(),
-                alt: img.alt,
-                span: img.span,
+              (img: { asset?: SanityImageAssetReference }) => ({
+                src: urlFor(img.asset || "")
+                  .width(1200)
+                  .url(),
+                alt: "",
+                span: 1,
               }),
             )}
           />
@@ -174,39 +176,6 @@ export default async function CaseStudyPage({
         </span>
       </footer>
     </div>
-  );
-}
-
-// ─── Sub-components ───────────────────────────────────────────────────────────
-
-function ExternalLink({ href, label }: { href: string; label: string }) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="group font-geist inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-muted"
-    >
-      <span className="relative overflow-hidden">
-        <span className="inline-block transition-transform duration-300 group-hover:-translate-y-full">
-          {label}
-        </span>
-        <span className="absolute inset-0 inline-block translate-y-full transition-transform duration-300 group-hover:translate-y-0 text-[#2d5a27]">
-          {label}
-        </span>
-      </span>
-      <span className="flex h-6 w-6 items-center justify-center rounded-full border border-muted/20 transition-all duration-300 group-hover:border-[#2d5a27] group-hover:bg-[#2d5a27] group-hover:text-[#f2f0eb]">
-        <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
-          <path
-            d="M1 7L7 1M7 1H3M7 1V5"
-            stroke="currentColor"
-            strokeWidth="1.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </span>
-    </a>
   );
 }
 

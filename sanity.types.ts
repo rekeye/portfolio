@@ -28,18 +28,19 @@ export type Project = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  title?: string;
-  slug?: Slug;
-  year?: string;
-  role?: string;
-  summary?: string;
-  heroImage?: {
+  title: string;
+  slug: Slug;
+  year: string;
+  role: string;
+  summary: string;
+  heroImage: {
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     _type: "image";
   };
+  heroAlt: string;
   overview?: string;
   detailImage?: {
     asset?: SanityImageAssetReference;
@@ -48,6 +49,7 @@ export type Project = {
     crop?: SanityImageCrop;
     _type: "image";
   };
+  detailAlt?: string;
   problem?: string;
   approach?: string;
   outcome?: string;
@@ -66,23 +68,23 @@ export type Project = {
 
 export type SanityImageCrop = {
   _type: "sanity.imageCrop";
-  top?: number;
-  bottom?: number;
-  left?: number;
-  right?: number;
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
 };
 
 export type SanityImageHotspot = {
   _type: "sanity.imageHotspot";
-  x?: number;
-  y?: number;
-  height?: number;
-  width?: number;
+  x: number;
+  y: number;
+  height: number;
+  width: number;
 };
 
 export type Slug = {
   _type: "slug";
-  current?: string;
+  current: string;
   source?: string;
 };
 
@@ -107,9 +109,9 @@ export type SanityImagePalette = {
 
 export type SanityImageDimensions = {
   _type: "sanity.imageDimensions";
-  height?: number;
-  width?: number;
-  aspectRatio?: number;
+  height: number;
+  width: number;
+  aspectRatio: number;
 };
 
 export type SanityImageMetadata = {
@@ -135,14 +137,14 @@ export type SanityFileAsset = {
   title?: string;
   description?: string;
   altText?: string;
-  sha1hash?: string;
-  extension?: string;
-  mimeType?: string;
-  size?: number;
-  assetId?: string;
+  sha1hash: string;
+  extension: string;
+  mimeType: string;
+  size: number;
+  assetId: string;
   uploadId?: string;
-  path?: string;
-  url?: string;
+  path: string;
+  url: string;
   source?: SanityAssetSourceData;
 };
 
@@ -164,14 +166,14 @@ export type SanityImageAsset = {
   title?: string;
   description?: string;
   altText?: string;
-  sha1hash?: string;
-  extension?: string;
-  mimeType?: string;
-  size?: number;
-  assetId?: string;
+  sha1hash: string;
+  extension: string;
+  mimeType: string;
+  size: number;
+  assetId: string;
   uploadId?: string;
-  path?: string;
-  url?: string;
+  path: string;
+  url: string;
   metadata?: SanityImageMetadata;
   source?: SanityAssetSourceData;
 };
@@ -198,26 +200,55 @@ export type AllSanitySchemaTypes =
   | SanityImageAsset
   | Geopoint;
 
+// Source: app/page.tsx
+// Variable: SELECTED_PROJECTS_QUERY
+// Query: *[_type == "project"] | order(order asc) {    title,    "slug": slug.current,    year,    summary,    stack,    "heroImage": heroImage.asset->url,  }
+export type SELECTED_PROJECTS_QUERY_RESULT = Array<{
+  title: string;
+  slug: string;
+  year: string;
+  summary: string;
+  stack: Array<string> | null;
+  heroImage: string | null;
+}>;
+
 // Source: app/work/[slug]/page.tsx
 // Variable: PROJECT_QUERY
-// Query: *[_type == "project" && slug.current == $slug][0] {    title,    year,    role,    stack,    summary,    heroImage,    overview,        problem,    approach,    outcome,    url,    repo,  }
+// Query: *[_type == "project" && slug.current == $slug][0] {    title,    year,    role,    stack,    summary,    heroImage,    heroAlt,    overview,    detailImage,    detailAlt,    problem,    approach,    outcome,    gallery,    url,    repo,  }
 export type PROJECT_QUERY_RESULT = {
-  title: string | null;
-  year: string | null;
-  role: string | null;
+  title: string;
+  year: string;
+  role: string;
   stack: Array<string> | null;
-  summary: string | null;
+  summary: string;
   heroImage: {
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     _type: "image";
-  } | null;
+  };
+  heroAlt: string;
   overview: string | null;
+  detailImage: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  } | null;
+  detailAlt: string | null;
   problem: string | null;
   approach: string | null;
   outcome: string | null;
+  gallery: Array<{
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  }> | null;
   url: string | null;
   repo: string | null;
 } | null;
@@ -226,6 +257,7 @@ export type PROJECT_QUERY_RESULT = {
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    '\n  *[_type == "project" && slug.current == $slug][0] {\n    title,\n    year,\n    role,\n    stack,\n    summary,\n    heroImage,\n    overview,\n    \n    problem,\n    approach,\n    outcome,\n    url,\n    repo,\n  }\n': PROJECT_QUERY_RESULT;
+    '\n  *[_type == "project"] | order(order asc) {\n    title,\n    "slug": slug.current,\n    year,\n    summary,\n    stack,\n    "heroImage": heroImage.asset->url,\n  }\n': SELECTED_PROJECTS_QUERY_RESULT;
+    '\n  *[_type == "project" && slug.current == $slug][0] {\n    title,\n    year,\n    role,\n    stack,\n    summary,\n    heroImage,\n    heroAlt,\n    overview,\n    detailImage,\n    detailAlt,\n    problem,\n    approach,\n    outcome,\n    gallery,\n    url,\n    repo,\n  }\n': PROJECT_QUERY_RESULT;
   }
 }

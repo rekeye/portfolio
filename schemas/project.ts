@@ -4,13 +4,48 @@ export const project = defineType({
   name: "project",
   type: "document",
   fields: [
-    defineField({ name: "title", type: "string" }),
-    defineField({ name: "slug", type: "slug" }),
-    defineField({ name: "year", type: "string" }),
-    defineField({ name: "role", type: "string" }),
-    defineField({ name: "summary", type: "text" }),
-    defineField({ name: "heroImage", type: "image" }),
-    defineField({ name: "heroAlt", type: "text" }),
+    defineField({
+      name: "title",
+      type: "string",
+      validation: (rule) =>
+        rule.required().error("This field is mandatory before publishing"),
+    }),
+    defineField({
+      name: "slug",
+      type: "slug",
+      validation: (rule) =>
+        rule.required().error("This field is mandatory before publishing"),
+    }),
+    defineField({
+      name: "year",
+      type: "string",
+      validation: (rule) =>
+        rule.required().error("This field is mandatory before publishing"),
+    }),
+    defineField({
+      name: "role",
+      type: "string",
+      validation: (rule) =>
+        rule.required().error("This field is mandatory before publishing"),
+    }),
+    defineField({
+      name: "summary",
+      type: "text",
+      validation: (rule) =>
+        rule.required().error("This field is mandatory before publishing"),
+    }),
+    defineField({
+      name: "heroImage",
+      type: "image",
+      validation: (rule) =>
+        rule.required().error("This field is mandatory before publishing"),
+    }),
+    defineField({
+      name: "heroAlt",
+      type: "text",
+      validation: (rule) =>
+        rule.required().error("This field is mandatory before publishing"),
+    }),
     defineField({ name: "overview", type: "text" }),
     defineField({ name: "detailImage", type: "image" }),
     defineField({ name: "detailAlt", type: "text" }),

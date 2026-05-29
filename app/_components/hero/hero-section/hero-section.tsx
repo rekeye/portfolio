@@ -1,10 +1,10 @@
-import { HeroTitle } from "@/components/hero/hero-title/hero-title";
+import { HeroTitle } from "@/app/_components/hero/hero-title";
 import { MagneticLink } from "@/components/navigation/magnetic-link";
 import styles from "./hero-section.module.css";
 
 export function HeroSection() {
   return (
-    <section className="container flex flex-col justify-center h-screen">
+    <section className="container flex flex-col justify-center h-screen px-5">
       <div className="h-4/5 flex flex-col justify-center">
         <HeroTitle />
       </div>

@@ -16,11 +16,11 @@ export function HeroTitle() {
   // TODO: cursor animation on safari is not running
 
   return (
-    <h1 className="flex items-center font-display text-[clamp(3.8rem,14vw,5.5rem)] md:text-[clamp(5rem,12vw,11rem)]">
+    <h1 className="font-display text-[clamp(3.8rem,14vw,5.5rem)] md:text-[clamp(5rem,12vw,11rem)]">
       <span ref={containerRef} />
       <span
         ref={cursorRef}
-        className="inline-block"
+        className="inline-block whitespace-nowrap"
         style={{
           width: "2px",
           backgroundColor: "var(--ink)",

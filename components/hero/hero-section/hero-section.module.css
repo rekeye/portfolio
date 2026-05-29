@@ -1,0 +1,21 @@
+@keyframes heartbeat {
+  0% { transform: scale(1);   opacity: 1; }
+  100% { transform: scale(1.75); opacity: 0; }
+}
+
+.dot_heartbeat {
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+}
+
+.dot_heartbeat::after {
+  content: "●";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  animation: heartbeat 2.48s ease-in-out infinite;
+  transform-origin: center;
+  will-change: transform, opacity;
+}

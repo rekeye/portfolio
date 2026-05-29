@@ -1,6 +1,9 @@
 "use client";
 
-import { TextLine, useTypingAnimation } from "@/hooks/useTypingAnimation";
+import {
+  TextLine,
+  useTypingAnimation,
+} from "@/hooks/animation/useTypingAnimation";
 
 const GREETING = new TextLine("Hi, my name is", "greeting", 0.05, 0.02);
 const NAME = new TextLine("Szymon Paluch.", "name", 0.072, 0.03);

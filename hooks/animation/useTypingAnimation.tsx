@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import styles from "@/hooks/animation/styles/typing-animation.module.css";
 
 gsap.registerPlugin(useGSAP);
 
@@ -120,7 +121,7 @@ const handleCursorBlink = (
       gsap.set(cursor, { clearProps: "opacity" });
       gsap.set(cursor, { clearProps: "webkitAnimation" });
       void cursor.offsetWidth;
-      cursor.classList.add("cursor--blinking");
+      cursor.classList.add(styles.cursor_blinking);
     },
     [],
     BLINK_START,
@@ -130,7 +131,7 @@ const handleCursorBlink = (
 
   tl.call(
     () => {
-      cursor.classList.remove("cursor--blinking");
+      cursor.classList.remove(styles.cursor_blinking);
     },
     [],
     `${CURSOR_FADE}+=0.41`,

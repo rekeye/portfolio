@@ -1,6 +1,6 @@
-import { HeroTitle } from "@/components/hero/hero-title";
+import { HeroTitle } from "@/components/hero/hero-title/hero-title";
 import { MagneticLink } from "@/components/navigation/magnetic-link";
-import "./hero.module.css";
+import styles from "./hero-section.module.css";
 
 export function HeroSection() {
   return (
@@ -12,7 +12,7 @@ export function HeroSection() {
         <div className="flex justify-between text-lg">
           <h2>Frontend engineering, done properly.</h2>
           <p>
-            <span className="dot--heartbeat">●</span> Available for work
+            <span className={styles.dot_heartbeat}>●</span> Available for work
           </p>
         </div>
         <MagneticLink

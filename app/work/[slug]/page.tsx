@@ -12,7 +12,7 @@ import { urlFor } from "@/sanity/lib/sanityImageUrl";
 import { Gallery } from "@/app/work/_components/gallery";
 import { SanityImageSource } from "@sanity/image-url";
 import { SanityImageAssetReference } from "@/sanity.types";
-import { ExternalLink } from "@/app/work/_components/external-link";
+import { ExternalLink } from "@/components/generic/external-link";
 
 async function getProject(slug: string) {
   return client.fetch(PROJECT_QUERY, { slug });

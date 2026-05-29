@@ -1,11 +1,10 @@
+import { defineQuery } from "next-sanity";
 import { WorkCard } from "@/app/_components/work/work-card";
-import { SELECTED_PROJECTS_QUERY_RESULT } from "@/sanity.types";
+import { client } from "@/sanity/lib/client";
 
-export function WorkSection({
-  projects = [],
-}: {
-  projects: SELECTED_PROJECTS_QUERY_RESULT;
-}) {
+export async function WorkSection() {
+  const projects = await client.fetch(SELECTED_PROJECTS_QUERY);
+
   return (
     <section id="work" className="container px-5 py-24">
       {/* Section header */}
@@ -27,3 +26,14 @@ export function WorkSection({
     </section>
   );
 }
+
+const SELECTED_PROJECTS_QUERY = defineQuery(`
+  *[_type == "project"] | order(order asc) {
+    title,
+    "slug": slug.current,
+    year,
+    summary,
+    stack,
+    "heroImage": heroImage.asset->url,
+  }
+`);

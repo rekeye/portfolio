@@ -15,11 +15,51 @@
 export declare const internalGroqTypeReferenceTo: unique symbol;
 
 // Source: schema.json
-export type SanityImageAssetReference = {
-  _ref: string;
-  _type: "reference";
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+export type Settings = {
+  _id: string;
+  _type: "settings";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  available?: boolean;
+  currentRole?: string;
+};
+
+export type Link = {
+  _type: "link";
+  label?: string;
+  url?: string;
+};
+
+export type Fact = {
+  _type: "fact";
+  label?: string;
+  value?: string;
+};
+
+export type About = {
+  _id: string;
+  _type: "about";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  prose?: string;
+  hobbies?: string;
+  facts?: Array<
+    {
+      _key: string;
+    } & Fact
+  >;
+  links?: Array<
+    {
+      _key: string;
+    } & Link
+  >;
+  images?: Array<
+    {
+      _key: string;
+    } & ImageWithAlt
+  >;
 };
 
 export type Project = {
@@ -33,37 +73,45 @@ export type Project = {
   year: string;
   role: string;
   summary: string;
-  heroImage: {
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
-  heroAlt: string;
+  heroImage: ImageWithAlt;
   overview?: string;
-  detailImage?: {
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
-  detailAlt?: string;
+  detailImage?: ImageWithAlt;
   problem?: string;
   approach?: string;
   outcome?: string;
-  gallery?: Array<{
+  gallery?: Array<
+    {
+      _key: string;
+    } & ImageWithAlt
+  >;
+  stack?: Array<string>;
+  url?: string;
+  repo?: string;
+};
+
+export type SanityImageAssetReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+};
+
+export type ImageWithAlt = {
+  _type: "imageWithAlt";
+  image?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     _type: "image";
-    _key: string;
-  }>;
-  stack?: Array<string>;
-  url?: string;
-  repo?: string;
+  };
+  alt?: string;
+};
+
+export type Slug = {
+  _type: "slug";
+  current: string;
+  source?: string;
 };
 
 export type SanityImageCrop = {
@@ -80,12 +128,6 @@ export type SanityImageHotspot = {
   y: number;
   height: number;
   width: number;
-};
-
-export type Slug = {
-  _type: "slug";
-  current: string;
-  source?: string;
 };
 
 export type SanityImagePaletteSwatch = {
@@ -186,11 +228,16 @@ export type Geopoint = {
 };
 
 export type AllSanitySchemaTypes =
-  | SanityImageAssetReference
+  | Settings
+  | Link
+  | Fact
+  | About
   | Project
+  | SanityImageAssetReference
+  | ImageWithAlt
+  | Slug
   | SanityImageCrop
   | SanityImageHotspot
-  | Slug
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
@@ -200,7 +247,42 @@ export type AllSanitySchemaTypes =
   | SanityImageAsset
   | Geopoint;
 
-// Source: app/page.tsx
+// Source: app/_components/about/about-section.tsx
+// Variable: CURRENT_ROLE_QUERY
+// Query: *[_type == "settings"][0] {  available,  currentRole}
+export type CURRENT_ROLE_QUERY_RESULT = {
+  available: boolean | null;
+  currentRole: string | null;
+} | null;
+
+// Source: app/_components/about/about-section.tsx
+// Variable: ABOUT_QUERY
+// Query: *[_type == "about"][0] {  prose,  hobbies,  "facts": facts[] {    label,    value  },  "links": links[] {    label,    href,  },  "images": images[] {    "image": image.asset->url,    alt  }}
+export type ABOUT_QUERY_RESULT = {
+  prose: string | null;
+  hobbies: string | null;
+  facts: Array<{
+    label: string | null;
+    value: string | null;
+  }> | null;
+  links: Array<{
+    label: string | null;
+    href: null;
+  }> | null;
+  images: Array<{
+    image: string | null;
+    alt: string | null;
+  }> | null;
+} | null;
+
+// Source: app/_components/hero/hero-section/hero-section.tsx
+// Variable: AVAILABILITY_QUERY
+// Query: *[_type == "settings"][0] {  available}
+export type AVAILABILITY_QUERY_RESULT = {
+  available: boolean | null;
+} | null;
+
+// Source: app/_components/work/work-section.tsx
 // Variable: SELECTED_PROJECTS_QUERY
 // Query: *[_type == "project"] | order(order asc) {    title,    "slug": slug.current,    year,    summary,    stack,    "heroImage": heroImage.asset->url,  }
 export type SELECTED_PROJECTS_QUERY_RESULT = Array<{
@@ -209,7 +291,7 @@ export type SELECTED_PROJECTS_QUERY_RESULT = Array<{
   year: string;
   summary: string;
   stack: Array<string> | null;
-  heroImage: string | null;
+  heroImage: null;
 }>;
 
 // Source: app/work/[slug]/page.tsx
@@ -221,34 +303,19 @@ export type PROJECT_QUERY_RESULT = {
   role: string;
   stack: Array<string> | null;
   summary: string;
-  heroImage: {
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
-  heroAlt: string;
+  heroImage: ImageWithAlt;
+  heroAlt: null;
   overview: string | null;
-  detailImage: {
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  } | null;
-  detailAlt: string | null;
+  detailImage: ImageWithAlt | null;
+  detailAlt: null;
   problem: string | null;
   approach: string | null;
   outcome: string | null;
-  gallery: Array<{
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-    _key: string;
-  }> | null;
+  gallery: Array<
+    {
+      _key: string;
+    } & ImageWithAlt
+  > | null;
   url: string | null;
   repo: string | null;
 } | null;
@@ -257,6 +324,9 @@ export type PROJECT_QUERY_RESULT = {
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
+    '\n*[_type == "settings"][0] {\n  available,\n  currentRole\n}\n': CURRENT_ROLE_QUERY_RESULT;
+    '\n*[_type == "about"][0] {\n  prose,\n  hobbies,\n  "facts": facts[] {\n    label,\n    value\n  },\n  "links": links[] {\n    label,\n    href,\n  },\n  "images": images[] {\n    "image": image.asset->url,\n    alt\n  }\n}\n': ABOUT_QUERY_RESULT;
+    '\n*[_type == "settings"][0] {\n  available\n}\n': AVAILABILITY_QUERY_RESULT;
     '\n  *[_type == "project"] | order(order asc) {\n    title,\n    "slug": slug.current,\n    year,\n    summary,\n    stack,\n    "heroImage": heroImage.asset->url,\n  }\n': SELECTED_PROJECTS_QUERY_RESULT;
     '\n  *[_type == "project" && slug.current == $slug][0] {\n    title,\n    year,\n    role,\n    stack,\n    summary,\n    heroImage,\n    heroAlt,\n    overview,\n    detailImage,\n    detailAlt,\n    problem,\n    approach,\n    outcome,\n    gallery,\n    url,\n    repo,\n  }\n': PROJECT_QUERY_RESULT;
   }

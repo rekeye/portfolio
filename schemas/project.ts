@@ -36,23 +36,20 @@ export const project = defineType({
     }),
     defineField({
       name: "heroImage",
-      type: "image",
-      validation: (rule) =>
-        rule.required().error("This field is mandatory before publishing"),
-    }),
-    defineField({
-      name: "heroAlt",
-      type: "text",
+      type: "imageWithAlt",
       validation: (rule) =>
         rule.required().error("This field is mandatory before publishing"),
     }),
     defineField({ name: "overview", type: "text" }),
-    defineField({ name: "detailImage", type: "image" }),
-    defineField({ name: "detailAlt", type: "text" }),
+    defineField({ name: "detailImage", type: "imageWithAlt" }),
     defineField({ name: "problem", type: "text" }),
     defineField({ name: "approach", type: "text" }),
     defineField({ name: "outcome", type: "text" }),
-    defineField({ name: "gallery", type: "array", of: [{ type: "image" }] }),
+    defineField({
+      name: "gallery",
+      type: "array",
+      of: [{ type: "imageWithAlt" }],
+    }),
     defineField({ name: "stack", type: "array", of: [{ type: "string" }] }),
     defineField({ name: "url", type: "url" }),
     defineField({ name: "repo", type: "url" }),

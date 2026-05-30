@@ -1,10 +1,5 @@
 import { Image } from "next-sanity/image";
 
-function extractDomain(src = "") {
-  const parts = src.split("/").filter(Boolean);
-  return parts.length >= 2 ? parts[1] : "preview";
-}
-
 export function UIImage({
   src,
   alt,
@@ -24,27 +19,11 @@ export function UIImage({
         <span className="h-2.5 w-2.5 rounded-full bg-muted/15" />
         <span className="h-2.5 w-2.5 rounded-full bg-muted/15" />
         <span className="h-2.5 w-2.5 rounded-full bg-muted/15" />
-        <div className="mx-auto flex h-5 w-48 items-center justify-center rounded-sm bg-muted/8 px-2">
-          <span className="font-geist text-[9px] uppercase tracking-widest text-muted/30">
-            {extractDomain(src)}
-          </span>
-        </div>
+        <div className="mx-auto flex h-5 w-48 items-center justify-center rounded-sm bg-muted/8 px-2"></div>
       </div>
 
-      {/* Screenshot */}
-      <div className="relative w-full">
-        <Image
-          src={src}
-          alt={alt}
-          width={1200}
-          height={800}
-          className="h-auto w-full object-cover object-top"
-          sizes={
-            span === 2
-              ? "(max-width: 768px) 100vw, 66vw"
-              : "(max-width: 768px) 100vw, 33vw"
-          }
-        />
+      <div className="relative h-72 w-full">
+        <Image src={src} alt={alt} fill className="object-contain object-top" />
       </div>
     </div>
   );

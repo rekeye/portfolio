@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { defineQuery } from "next-sanity";
 import { Image } from "next-sanity/image";
@@ -109,7 +110,7 @@ export default async function CaseStudyPage({
       )}
       {detailImage?.image && detailImage.alt && (
         <div className="flex justify-center">
-          <div className="relative aspect-video w-full max-w-5xl overflow-hidden rounded-2xl border border-muted/10 bg-white shadow-sm p-12">
+          <div className="relative aspect-video w-full max-w-5xl overflow-hidden p-12">
             <Image
               src={urlFor(detailImage.image).url()}
               alt={detailImage.alt}

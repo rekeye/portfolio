@@ -275,6 +275,16 @@ export type ABOUT_QUERY_RESULT = {
   }> | null;
 } | null;
 
+// Source: app/_components/contact/contact-section.tsx
+// Variable: LINKS_QUERY
+// Query: *[_type == "about"][0] {  "links": links[] {    label,    href,  }}
+export type LINKS_QUERY_RESULT = {
+  links: Array<{
+    label: string;
+    href: string;
+  }> | null;
+} | null;
+
 // Source: app/_components/hero/hero-section/hero-section.tsx
 // Variable: AVAILABILITY_QUERY
 // Query: *[_type == "settings"][0] {  available}
@@ -299,7 +309,7 @@ export type SELECTED_PROJECTS_QUERY_RESULT = Array<{
 
 // Source: app/work/[slug]/page.tsx
 // Variable: PROJECT_QUERY
-// Query: *[_type == "project" && slug.current == $slug][0] {    title,    year,    role,    stack,    summary,    heroImage {      "image": image.asset->url,      alt    },    overview,    detailImage {      "image": image.asset->url,      alt    },    problem,    approach,    outcome,    gallery,    url,    repo,  }
+// Query: *[_type == "project" && slug.current == $slug][0] {    title,    year,    role,    stack,    summary,    heroImage {      "image": image.asset->url,      alt    },    overview,    detailImage {      "image": image.asset->url,      alt    },    problem,    approach,    outcome,    gallery[] {      "image": image.asset->url,      alt    },    url,    repo,  }
 export type PROJECT_QUERY_RESULT = {
   title: string;
   year: string;
@@ -318,11 +328,10 @@ export type PROJECT_QUERY_RESULT = {
   problem: string | null;
   approach: string | null;
   outcome: string | null;
-  gallery: Array<
-    {
-      _key: string;
-    } & ImageWithAlt
-  > | null;
+  gallery: Array<{
+    image: string | null;
+    alt: string | null;
+  }> | null;
   url: string | null;
   repo: string | null;
 } | null;
@@ -333,8 +342,9 @@ declare module "@sanity/client" {
   interface SanityQueries {
     '\n*[_type == "settings"][0] {\n  available,\n  currentRole\n}\n': CURRENT_ROLE_QUERY_RESULT;
     '\n*[_type == "about"][0] {\n  prose,\n  hobbies,\n  "facts": facts[] {\n    label,\n    value\n  },\n  "links": links[] {\n    label,\n    href,\n  },\n  "images": images[] {\n    "image": image.asset->url,\n    alt\n  }\n}\n': ABOUT_QUERY_RESULT;
+    '\n*[_type == "about"][0] {\n  "links": links[] {\n    label,\n    href,\n  }\n}\n': LINKS_QUERY_RESULT;
     '\n*[_type == "settings"][0] {\n  available\n}\n': AVAILABILITY_QUERY_RESULT;
     '\n  *[_type == "project"] | order(order asc) {\n    title,\n    "slug": slug.current,\n    year,\n    summary,\n    stack,\n    heroImage {\n      "image": image.asset->url,\n      alt\n    },\n  }\n': SELECTED_PROJECTS_QUERY_RESULT;
-    '\n  *[_type == "project" && slug.current == $slug][0] {\n    title,\n    year,\n    role,\n    stack,\n    summary,\n    heroImage {\n      "image": image.asset->url,\n      alt\n    },\n    overview,\n    detailImage {\n      "image": image.asset->url,\n      alt\n    },\n    problem,\n    approach,\n    outcome,\n    gallery,\n    url,\n    repo,\n  }\n': PROJECT_QUERY_RESULT;
+    '\n  *[_type == "project" && slug.current == $slug][0] {\n    title,\n    year,\n    role,\n    stack,\n    summary,\n    heroImage {\n      "image": image.asset->url,\n      alt\n    },\n    overview,\n    detailImage {\n      "image": image.asset->url,\n      alt\n    },\n    problem,\n    approach,\n    outcome,\n    gallery[] {\n      "image": image.asset->url,\n      alt\n    },\n    url,\n    repo,\n  }\n': PROJECT_QUERY_RESULT;
   }
 }

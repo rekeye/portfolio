@@ -49,7 +49,8 @@ const handleTypeLine = (
     container: HTMLElement;
   },
 ) => {
-  tl.addLabel(`${line.title}Start+=${lineDuration + 0.1}`);
+  tl.to({}, { duration: lineDuration + 0.1 });
+  tl.addLabel(`${line.title}Start`);
   line.text.split("").forEach((char, i) => {
     tl.call(
       () => {
@@ -146,6 +147,11 @@ export function useTypingAnimation({ textLines }: { textLines: TextLine[] }) {
     const container = containerRef.current;
     const cursor = cursorRef.current;
     if (!container || !cursor) return;
+
+    container.dataset.jsReady = "true";
+    container.textContent = "";
+    container.classList.remove("invisible", "noscript:visible");
+    cursor.classList.remove("invisible");
 
     const tl = gsap.timeline({ delay: 0.2 });
     for (let i = 0; i < textLines.length; i++) {

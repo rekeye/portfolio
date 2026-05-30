@@ -10,6 +10,8 @@
 @theme {
   --font-display: var(--font-cormorant);
   --font-default: var(--font-geist);
+
+  --text-2xs: 0.625rem;
   
   --color-canvas: var(--canvas);
   --color-ink: var(--ink);

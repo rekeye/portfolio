@@ -24,12 +24,12 @@ export function Navbar() {
   return (
     <header
       ref={headerRef}
-      className="sticky top-0 w-full z-50 bg-canvas flex justify-center"
+      className="fixed top-0 w-full z-50 bg-canvas flex justify-center"
     >
-      <nav className="container grow flex justify-between items-center border-b border-muted/10 box-border py-6 px-5 md:px-0">
+      <nav className="container grow flex justify-between items-center border-b border-muted/10 box-border py-6 px-5">
         <Link
           href="/"
-          className="text-xs tracking-[0.2em] uppercase font-medium text-ink"
+          className="font-display text-sm uppercase font-medium text-ink"
         >
           SP
         </Link>
@@ -37,7 +37,7 @@ export function Navbar() {
           {NAV_LINKS.map((label) => (
             <MagneticLink
               key={label}
-              href={`#${label.toLowerCase()}`}
+              href={`/#${label.toLowerCase()}`}
               className="text-sm tracking-wide text-ink/60 hover:text-ink transition-colors duration-200"
             >
               {label}

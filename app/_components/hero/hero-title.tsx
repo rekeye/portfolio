@@ -17,10 +17,15 @@ export function HeroTitle() {
 
   return (
     <h1 className="font-display text-[clamp(3.8rem,14vw,5.5rem)] md:text-[clamp(5rem,12vw,11rem)]">
-      <span ref={containerRef} />
+      <noscript>
+        <style>{`.hero-name { visibility: visible !important; }`}</style>
+      </noscript>
+      <span ref={containerRef} className="invisible noscript:visible">
+        Szymon Paluch.
+      </span>
       <span
         ref={cursorRef}
-        className="inline-block whitespace-nowrap"
+        className="inline-block whitespace-nowrap invisible"
         style={{
           width: "2px",
           backgroundColor: "var(--ink)",

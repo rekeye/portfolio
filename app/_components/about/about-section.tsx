@@ -4,6 +4,7 @@ import { Fact } from "@/app/_components/about/fact";
 import { ExternalLink } from "@/components/generic/external-link";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/sanityImageUrl";
+import { SectionHeader } from "@/components/section/section-header";
 
 export async function AboutSection() {
   const settings = await client.fetch(CURRENT_ROLE_QUERY);
@@ -13,17 +14,13 @@ export async function AboutSection() {
 
   return (
     <section id="about">
-      <p className="font-geist mb-8 text-[10px] uppercase tracking-[0.2em] text-[#1a2e1a]/30">
-        About
-      </p>
-      <div className="mb-16 h-px w-full bg-[#1a2e1a]/10" />
-
-      <div className="flex flex-col gap-16 md:flex-row md:gap-24">
+      <SectionHeader title="About me" />
+      <main className="flex flex-col gap-16 md:flex-row md:gap-24">
         <div className="flex flex-col gap-6 md:w-[55%]">
-          <p className="font-geist text-sm leading-[1.9] text-[#1a2e1a]/60 whitespace-pre-wrap">
+          <p className="text-sm leading-[1.9] text-[#1a2e1a]/60 whitespace-pre-wrap">
             {about.prose}
           </p>
-          <p className="font-geist text-sm leading-[1.9] text-[#1a2e1a]/60 whitespace-pre-wrap">
+          <p className="text-sm leading-[1.9] text-[#1a2e1a]/60 whitespace-pre-wrap">
             {about.hobbies}
           </p>
         </div>
@@ -55,9 +52,9 @@ export async function AboutSection() {
               ))}
           </div>
         </div>
-      </div>
+      </main>
       {about.images && (
-        <div className="mt-16 grid h-105 grid-rows-3 grid-cols-2 sm:grid-rows-2 sm:grid-cols-2 gap-3 md:mt-20 md:h-180 md:grid-cols-3">
+        <div className="mt-16 grid h-105 grid-rows-3 grid-cols-2 sm:grid-rows-2 sm:grid-cols-2 gap-3 md:mt-20 md:h-140 md:grid-cols-3">
           <div className="relative col-span-2 row-span-2 sm:col-span-1 overflow-hidden rounded-lg md:col-span-2">
             <Image
               src={urlFor(about.images[0].image || "").url()}

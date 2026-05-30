@@ -12,21 +12,21 @@ export async function HeroSection() {
       <div className="grow-3 flex flex-col justify-center">
         <HeroTitle />
       </div>
-      <div className="grow flex flex-col justify-center gap-1">
-        <div className="flex justify-between text-lg">
-          <h2>Frontend engineering, done properly.</h2>
+      <div className="grow flex flex-col justify-center gap-4 text-muted">
+        <p>Frontend engineering, done properly.</p>
+        <div className="flex justify-between">
+          <MagneticLink
+            className="w-fit text-lg font-medium tracking-wide transition-colors duration-200"
+            href="#work"
+          >
+            Selected work ↓
+          </MagneticLink>
           {settings && settings.available && (
-            <p>
+            <p className="tracking-wide">
               <PulsingDot /> Available for work
             </p>
           )}
         </div>
-        <MagneticLink
-          className="w-fit text-xl font-medium tracking-wide transition-colors duration-200"
-          href="#work"
-        >
-          Selected work ↓
-        </MagneticLink>
       </div>
     </section>
   );

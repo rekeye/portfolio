@@ -11,12 +11,12 @@ export function Fact({
 }) {
   return (
     <li className="flex flex-col gap-1">
-      <span className="font-geist text-[10px] uppercase tracking-[0.2em] text-[#1a2e1a]/30">
+      <span className="font-geist text-2xs uppercase tracking-[0.2em] text-muted/40">
         {label}
       </span>
       <span
         className={`font-geist text-sm ${
-          accent ? "text-[#2d5a27]" : "text-[#1a2e1a]/60"
+          accent ? "text-accent" : "text-muted/60"
         }`}
       >
         {accent && <PulsingDot />} {value}

@@ -64,7 +64,7 @@ export function WorkCard({
               {stack.map((item) => (
                 <span
                   key={item}
-                  className="rounded-full border border-muted/12 px-2.5 py-0.5 text-[10px] uppercase tracking-[0.12em] text-muted/40"
+                  className="rounded-full border border-muted/12 px-2.5 py-0.5 text-2xs uppercase tracking-[0.12em] text-muted/40"
                 >
                   {item}
                 </span>

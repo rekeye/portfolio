@@ -15,6 +15,4 @@ export default async function Home() {
   );
 }
 
-export const metadata: Metadata = {
-  title: "Szymon Paluch",
-};
+export const metadata: Metadata = {};

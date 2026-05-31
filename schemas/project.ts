@@ -53,5 +53,6 @@ export const project = defineType({
     defineField({ name: "stack", type: "array", of: [{ type: "string" }] }),
     defineField({ name: "url", type: "url" }),
     defineField({ name: "repo", type: "url" }),
+    defineField({ name: "order", type: "number" }),
   ],
 });

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Cormorant, Geist } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "lenis/dist/lenis.css";
 import "./globals.css";
 import { Navbar } from "@/components/navigation/navbar";
@@ -37,6 +38,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <Analytics />
       </body>
     </html>
   );
